@@ -1,26 +1,42 @@
 <template lang="pug">
-#app.todo-app
-  div {{ message }}
-
-.test-div
-  h1.test-h1 Okey it works fine
+div.container
+  header.header
+    .header__search
+      SearchBar(v-model="searchQuery" :is-loading="isLoading")
+  main.main There will be content
+  footer.footer There will be footer
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+
+import SearchBar from '@/components/todos/SearchBar.vue';
 
 export default defineComponent({
   name: 'App',
+  components: {
+    SearchBar
+  },
   setup() {
+    const searchQuery = ref<string | null>(null);
+    const isLoading = ref(false);
+
     return {
-      message: 'Todo list should be here'
+      searchQuery,
+      isLoading
     };
   }
 });
 </script>
 
 <style lang="scss">
-.todo-app {
-  text-align: center;
+@import 'src/styles/index';
+.container {
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+.header {
+  padding-top: 3rem;
 }
 </style>

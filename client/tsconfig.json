@@ -20,10 +20,10 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/**/*.tsx",
     "src/**/*.vue",
+    "src/**/**/*.ts",
+    "src/**/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx",
     "*.conf*.js"
   ],
   "exclude": ["node_modules"]

@@ -1,20 +1,21 @@
 <template lang="pug">
-  #app.todo-app
-    div {{ message }}
+#app.todo-app
+  div {{ message }}
+
+.test-div
+  h1.test-h1 Okey it works fine
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'App',
   setup() {
-    // utilise todo-bitpanda-server to get data
-
     return {
-      message: 'Todo list should be here',
+      message: 'Todo list should be here'
     };
-  },
+  }
 });
 </script>
 

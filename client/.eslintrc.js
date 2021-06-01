@@ -13,9 +13,9 @@ module.exports = {
   ],
   parserOptions: {
     extraFileExtensions: ['.vue'],
-    parser: '@typescript-eslint/parser',
-    project: resolve(__dirname, './tsconfig.json'),
+    project: ['./tsconfig.json'],
     tsconfigRootDir: __dirname,
+    parser: '@typescript-eslint/parser',
     ecmaVersion: 2018,
     sourceType: 'module'
   },

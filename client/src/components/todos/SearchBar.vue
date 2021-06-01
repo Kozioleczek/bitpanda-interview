@@ -2,7 +2,7 @@
 .search-input
     div.search-input__icon
         img.img--fluid(:src="require('@/assets/svgs/loupe.svg')")
-    input.search-input__form(placeholder="Search")
+    input.search-input__input(placeholder="Search")
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
@@ -36,7 +36,7 @@ export default defineComponent({
     display: flex;
     align-self: center;
   }
-  &__form {
+  &__input {
     background: transparent;
     border: none;
     padding-left: 1rem;

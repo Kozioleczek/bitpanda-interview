@@ -14,7 +14,7 @@ export default defineComponent({});
 .create-todo {
   display: flex;
   justify-content: space-between;
-  padding: 1rem 1.5rem 1rem 1.5rem;
+  padding: 1.5rem 1.5rem 1.5rem 1.5rem;
   &__input {
     background: transparent;
     border: none;

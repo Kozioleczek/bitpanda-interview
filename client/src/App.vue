@@ -1,5 +1,5 @@
 <template lang="pug">
-div.container
+div#app.container
   header.header
     .header__search
       SearchBar(v-model="searchQuery" :is-loading="isLoading")
@@ -41,7 +41,8 @@ export default defineComponent({
 <style lang="scss">
 @import 'src/styles/index';
 .container {
-  max-width: 60rem;
+  max-width: 50rem;
+  width: 100%;
   margin: 0 auto;
 }
 

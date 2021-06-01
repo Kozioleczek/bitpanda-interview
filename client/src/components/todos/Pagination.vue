@@ -33,7 +33,7 @@ export default defineComponent({});
   }
   &__divider {
     background-color: rgba(0, 0, 0, 0.17);
-    width: 0.15rem;
+    width: 0.1rem;
     height: 100%;
   }
 }

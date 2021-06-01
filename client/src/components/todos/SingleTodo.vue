@@ -1,9 +1,10 @@
 <template lang="pug">
-.todo(:class="{'todo--done': isDone}")
+.todo
     .todo__checkbox
         BaseCheckbox(:is-checked="isDone" @clicked="isDone = !isDone")
     .todo__content
-        p.text--xl {{content}}
+        p.description(:class="{'description--done': isDone}") {{content}}
+          span.description__date - 5 minutes ago
     button.todo__button
         img.img--xl(:src="require('@/assets/svgs/remove.svg')")
 </template>
@@ -49,13 +50,6 @@ export default defineComponent({
     }
   }
 
-  &--done {
-    #{$this}__content {
-      text-decoration: line-through;
-      color: $secondary-gray;
-    }
-  }
-
   &__content {
     flex-grow: 1;
     display: flex;
@@ -70,9 +64,19 @@ export default defineComponent({
   }
 }
 
-.text--xl {
-  font-size: 1.5rem;
-  margin: 0;
+.description {
   @extend .font--lighter;
+  font-size: 1.5rem;
+  margin: auto 0 auto 0;
+
+  &--done {
+    text-decoration: line-through;
+    color: $secondary-gray;
+  }
+  &__date {
+    margin-left: 0.5rem;
+    text-decoration: none;
+    font-size: 1rem;
+  }
 }
 </style>

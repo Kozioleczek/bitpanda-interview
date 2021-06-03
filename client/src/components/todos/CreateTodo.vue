@@ -1,13 +1,21 @@
 <template lang="pug">
 .create-todo
-    input.create-todo__input(placeholder="Take o note")
-    .create-todo__icon
+    input.create-todo__input(placeholder="Take o note" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)")
+    button.create-todo__button(@click="$emit('createTask')")
         img.img--xl(:src="require('@/assets/svgs/plus.svg')")
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-export default defineComponent({});
+export default defineComponent({
+  props: {
+    modelValue: {
+      type: String,
+      default: ''
+    }
+  },
+  emits: ['createTask', 'update:modelValue']
+});
 </script>
 <style lang="scss" scoped>
 @import 'src/styles/index';
@@ -22,8 +30,11 @@ export default defineComponent({});
     font-size: 1.5rem;
     @extend .font--light;
   }
-  &__icon {
+  &__button {
     height: auto;
+    background: transparent;
+    cursor: pointer;
+    border: none;
     width: 1.5rem;
     display: flex;
     align-self: center;

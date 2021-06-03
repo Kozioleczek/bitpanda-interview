@@ -4,20 +4,23 @@ div#app.container
     .header__search
       SearchBar(v-model="searchQuery" :is-loading="isLoading")
   main.main
-    CreateTodo
+    CreateTodo(v-model="newTodoDescription" @createTask="handleCreate(newTodoDescription)")
     transition-group(name="todo-transition")
-      SingleTodo(v-for="i in 3" :key="i")
+      SingleTodo(v-for="(todo, index) in todos" :key="index" :is-done="todo.done" @delete="handleDelete(todo._id)" @change:isDone="handleChangeStatus(todo._id, !todo.done)")
+        template(#content) {{todo.description}}
   footer.footer
     Pagination
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, watch, onMounted } from 'vue';
 
 import CreateTodo from '@/components/todos/CreateTodo.vue';
 import Pagination from '@/components/todos/Pagination.vue';
 import SearchBar from '@/components/todos/SearchBar.vue';
 import SingleTodo from '@/components/todos/SingleTodo.vue';
+import useSearch from '@/composables/useSearch';
+import useTodos from '@/composables/useTodos';
 
 export default defineComponent({
   name: 'App',
@@ -28,12 +31,40 @@ export default defineComponent({
     Pagination
   },
   setup() {
-    const searchQuery = ref<string | null>(null);
+    const searchQuery = ref<string>('');
     const isLoading = ref(false);
+
+    const { todos, fetch } = useTodos();
+
+    onMounted(() => fetch());
+
+    watch(searchQuery, query => {
+      useSearch(query, fetch);
+    });
+
+    const handleDelete = (taskID: string) => {
+      console.log('handleDelete', taskID);
+    };
+
+    const handleChangeStatus = (taskID: string, isDone: boolean) => {
+      console.log('handleChangeStatus', taskID, isDone);
+    };
+
+    // creating new todo
+    const newTodoDescription = ref('');
+
+    const handleCreate = (description: string) => {
+      console.log('handleCreate', description);
+    };
 
     return {
       searchQuery,
-      isLoading
+      isLoading,
+      todos,
+      handleDelete,
+      handleChangeStatus,
+      handleCreate,
+      newTodoDescription
     };
   }
 });

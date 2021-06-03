@@ -1,16 +1,16 @@
-import { ref, Ref, reactive } from 'vue';
+import { ref, reactive } from 'vue';
 
-import { fetchTodos } from '@/services/todos';
+import {
+  fetchTodos,
+  changeTodo,
+  deleteTodo,
+  createTodo
+} from '@/services/todos';
+import IUseTodos from '@/types/interfaces/IUseTodos';
 import { Meta } from '@/types/todos/Meta';
 import { SingleTodo } from '@/types/todos/SingleTodo';
 
-interface UseTodos {
-  todos: Ref<SingleTodo[]>;
-  meta: Meta;
-  fetch: (description: string, limit: number, offset: number) => Promise<void>;
-}
-
-function useTodos(): UseTodos {
+function useTodos(): IUseTodos {
   const todos = ref<SingleTodo[]>([]);
 
   let meta = reactive<Meta>({
@@ -25,9 +25,9 @@ function useTodos(): UseTodos {
     prevPage: null
   });
 
-  const fetch = async (description: string, limit: number, offset: number) => {
+  const fetch: IUseTodos['fetch'] = async (searchQuery, limit, offset) => {
     try {
-      const response = await fetchTodos(description, limit, offset);
+      const response = await fetchTodos(searchQuery, limit, offset);
 
       todos.value = [...response.data.items];
       meta = { ...response.data.meta };
@@ -36,7 +36,37 @@ function useTodos(): UseTodos {
     }
   };
 
-  return { todos, meta, fetch };
+  const changeTaskStatus: IUseTodos['changeTaskStatus'] = async (
+    taskID,
+    isDone
+  ) => {
+    try {
+      await changeTodo(taskID, isDone);
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  const deleteTask: IUseTodos['deleteTask'] = async taskID => {
+    try {
+      await deleteTodo(taskID);
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  const createTask: IUseTodos['createTask'] = async description => {
+    try {
+      const response = await createTodo(description);
+
+      todos.value.unshift(response.data);
+      todos.value.splice(todos.value.length, 1);
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  return { todos, meta, fetch, changeTaskStatus, deleteTask, createTask };
 }
 
 export default useTodos;

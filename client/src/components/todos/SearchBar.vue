@@ -2,7 +2,7 @@
 .search-input
     div.search-input__icon
         img.img--fluid(:src="require('@/assets/svgs/loupe.svg')")
-    input.search-input__input(placeholder="Search")
+    input.search-input__input(placeholder="Search" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)")
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';

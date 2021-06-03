@@ -1,15 +1,16 @@
 <template lang="pug">
 .todo
     .todo__checkbox
-        BaseCheckbox(:is-checked="isDone" @clicked="isDone = !isDone")
+        BaseCheckbox(:is-checked="isDone" @clicked="$emit('change:isDone')")
     .todo__content
-        p.description(:class="{'description--done': isDone}") {{content}}
+        p.description(:class="{'description--done': isDone}") 
+          slot(name="content")
           span.description__date - 5 minutes ago
-    button.todo__button
+    button.todo__button(@click="$emit('delete')")
         img.img--xl(:src="require('@/assets/svgs/remove.svg')")
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 
 import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
 
@@ -18,18 +19,12 @@ export default defineComponent({
     BaseCheckbox
   },
   props: {
-    content: {
-      type: String,
-      default: 'Think real hard about whats for lunch'
+    isDone: {
+      type: Boolean,
+      default: false
     }
   },
-  setup() {
-    const isDone = ref(false);
-
-    return {
-      isDone
-    };
-  }
+  emits: ['change:isDone', 'delete']
 });
 </script>
 <style lang="scss" scoped>

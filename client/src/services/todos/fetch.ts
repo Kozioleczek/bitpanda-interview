@@ -4,16 +4,16 @@ import useHTTP from '@/http';
 import { TodosResponse } from '@/types/todos/TodosResponse';
 
 async function fetchTodos(
-  description = '',
+  searchQuery = '',
   limit = 10,
   offset = 0
 ): Promise<AxiosResponse<TodosResponse>> {
   try {
     const pagination = `limit=${limit}&offset=${offset}`;
     const query =
-      description === ''
+      searchQuery === ''
         ? `?${pagination}`
-        : `?description=${description}&${pagination}`;
+        : `?description=${searchQuery}&${pagination}`;
     const response = await useHTTP().get<TodosResponse>(`/todo${query}`);
 
     return response;

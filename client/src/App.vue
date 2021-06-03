@@ -5,9 +5,11 @@ div#app.container
       SearchBar(v-model="searchQuery" :is-loading="isLoading")
   main.main
     CreateTodo(v-model="newTodoDescription" @createTask="handleCreate(newTodoDescription)")
-    transition-group(name="todo-transition")
+    transition-group(v-if="todos.length > 0" name="todo-transition")
       SingleTodo(v-for="(todo, index) in todos" :key="todo._id" :is-done="todo.done" :date-created="todo.createdAt" @delete="handleDelete(todo._id)" @change:isDone="handleChangeStatus(todo._id, !todo.done)")
         template(#content) {{todo.description}}
+    .no-todos(v-else)
+        p.no-todos__content {{searchQuery === '' ? 'There is no todos available. Please create new one.' : `There is no results for phrase: ${searchQuery}`}}
   footer.footer
     Pagination
 </template>
@@ -94,6 +96,14 @@ export default defineComponent({
   background-color: $white;
   border-radius: 1rem;
   border: 0.15rem solid rgba(0, 0, 0, 0.17);
+}
+
+.no-todos {
+  padding: 1rem 1.5rem 1rem 1.5rem;
+  &__content {
+    text-align: center;
+    margin: 0;
+  }
 }
 
 .footer {

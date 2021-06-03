@@ -5,14 +5,16 @@
     .todo__content
         p.description(:class="{'description--done': isDone}") 
           slot(name="content")
-          span.description__date - 5 minutes ago
+          span.description__date {{currentDateFormated}}
     button.todo__button(@click="$emit('delete')")
         img.img--xl(:src="require('@/assets/svgs/remove.svg')")
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 
 import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
+
+import useDateInterval from '@/helpers/useDateInterval';
 
 export default defineComponent({
   components: {
@@ -22,9 +24,20 @@ export default defineComponent({
     isDone: {
       type: Boolean,
       default: false
+    },
+    dateCreated: {
+      type: String,
+      default: ''
     }
   },
-  emits: ['change:isDone', 'delete']
+  emits: ['change:isDone', 'delete'],
+  setup(props) {
+    const { currentDateFormated } = useDateInterval(props.dateCreated, 600);
+
+    return {
+      currentDateFormated
+    };
+  }
 });
 </script>
 <style lang="scss" scoped>

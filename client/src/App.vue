@@ -6,7 +6,7 @@ div#app.container
   main.main
     CreateTodo(v-model="newTodoDescription" @createTask="handleCreate(newTodoDescription)")
     transition-group(name="todo-transition")
-      SingleTodo(v-for="(todo, index) in todos" :key="index" :is-done="todo.done" @delete="handleDelete(todo._id)" @change:isDone="handleChangeStatus(todo._id, !todo.done)")
+      SingleTodo(v-for="(todo, index) in todos" :key="todo._id" :is-done="todo.done" :date-created="todo.createdAt" @delete="handleDelete(todo._id)" @change:isDone="handleChangeStatus(todo._id, !todo.done)")
         template(#content) {{todo.description}}
   footer.footer
     Pagination

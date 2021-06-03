@@ -78,7 +78,7 @@ function useTodos(): IUseTodos {
     try {
       const response = await createTodo(description);
 
-      todos.value.unshift(response.data);
+      todos.value.push(response.data);
     } catch (error) {
       throw new Error(error);
     }

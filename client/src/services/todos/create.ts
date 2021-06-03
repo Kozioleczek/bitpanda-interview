@@ -8,9 +8,7 @@ async function createTodo(
 ): Promise<AxiosResponse<SingleTodo>> {
   try {
     const response = await useHTTP().post<SingleTodo>('/todo', {
-      data: {
-        description
-      }
+      description
     });
 
     return response;

@@ -34,7 +34,13 @@ export default defineComponent({
     const searchQuery = ref<string>('');
     const isLoading = ref(false);
 
-    const { todos, fetch } = useTodos();
+    const {
+      todos,
+      fetch,
+      deleteTask,
+      createTask,
+      changeTaskStatus
+    } = useTodos();
 
     onMounted(() => fetch());
 
@@ -42,19 +48,20 @@ export default defineComponent({
       useSearch(query, fetch);
     });
 
-    const handleDelete = (taskID: string) => {
-      console.log('handleDelete', taskID);
+    const handleDelete = async (taskID: string) => {
+      await deleteTask(taskID);
+      await fetch();
     };
 
     const handleChangeStatus = (taskID: string, isDone: boolean) => {
-      console.log('handleChangeStatus', taskID, isDone);
+      changeTaskStatus(taskID, isDone);
     };
 
     // creating new todo
     const newTodoDescription = ref('');
 
     const handleCreate = (description: string) => {
-      console.log('handleCreate', description);
+      createTask(description);
     };
 
     return {

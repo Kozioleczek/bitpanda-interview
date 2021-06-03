@@ -41,7 +41,17 @@ function useTodos(): IUseTodos {
     isDone
   ) => {
     try {
-      await changeTodo(taskID, isDone);
+      // local update of todo
+      const modifiedTodoIndex = todos.value.findIndex(
+        todo => todo._id === taskID
+      );
+
+      if (modifiedTodoIndex !== -1) {
+        todos.value[modifiedTodoIndex].done = isDone;
+        await changeTodo(taskID, isDone);
+      } else {
+        throw new Error('Provided task ID does not exist');
+      }
     } catch (error) {
       throw new Error(error);
     }
@@ -49,7 +59,16 @@ function useTodos(): IUseTodos {
 
   const deleteTask: IUseTodos['deleteTask'] = async taskID => {
     try {
-      await deleteTodo(taskID);
+      const modifiedTodoIndex = todos.value.findIndex(
+        todo => todo._id === taskID
+      );
+
+      if (modifiedTodoIndex !== -1) {
+        todos.value.splice(modifiedTodoIndex, 1);
+        await deleteTodo(taskID);
+      } else {
+        throw new Error('Provided task ID does not exist');
+      }
     } catch (error) {
       throw new Error(error);
     }
@@ -60,7 +79,6 @@ function useTodos(): IUseTodos {
       const response = await createTodo(description);
 
       todos.value.unshift(response.data);
-      todos.value.splice(todos.value.length, 1);
     } catch (error) {
       throw new Error(error);
     }

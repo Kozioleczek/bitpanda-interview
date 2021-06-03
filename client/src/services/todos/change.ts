@@ -9,9 +9,7 @@ async function changeTodo(
 ): Promise<AxiosResponse<SingleTodo>> {
   try {
     const response = await useHTTP().put<SingleTodo>(`/todo/${id}`, {
-      data: {
-        done: isDone
-      }
+      done: isDone
     });
 
     return response;

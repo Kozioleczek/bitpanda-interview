@@ -1,6 +1,6 @@
 <template lang="pug">
 .create-todo
-    input.create-todo__input(placeholder="Take o note" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)")
+    input.create-todo__input(placeholder="Take o note" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" @keyup.enter="$emit('createTask')")
     button.create-todo__button(@click="$emit('createTask')")
         img.img--xl(:src="require('@/assets/svgs/plus.svg')")
 </template>

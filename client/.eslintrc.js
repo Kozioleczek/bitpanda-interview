@@ -52,6 +52,7 @@ module.exports = {
       }
     ],
     'comma-dangle': 'off',
+    'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'object-curly-newline': 'off',
     'implicit-arrow-linebreak': 'off',
     'padding-line-between-statements': [

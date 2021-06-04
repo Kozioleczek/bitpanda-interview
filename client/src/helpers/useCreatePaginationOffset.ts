@@ -1,4 +1,4 @@
-import IUseCreatePaginationOffset from '@/types/interfaces/IUseCreatePaginationOffset';
+import IUseCreatePaginationOffset from '@/types/interfaces/pagination/helpers/IUseCreatePaginationOffset';
 
 function useCreatePaginationOffset(args: IUseCreatePaginationOffset): number {
   if (args.moveDirection === 1 && !args.hasNextPage) {

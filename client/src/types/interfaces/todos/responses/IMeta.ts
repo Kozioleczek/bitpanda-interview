@@ -1,4 +1,4 @@
-export interface Meta {
+interface IMeta {
   [index: string]: boolean | number | null;
   hasNextPage: boolean;
   hasPrevPage: boolean;
@@ -10,3 +10,5 @@ export interface Meta {
   pageCount: number;
   prevPage: number | null;
 }
+
+export default IMeta;

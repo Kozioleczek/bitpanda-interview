@@ -1,11 +1,8 @@
 import { useIntervalFn } from '@vueuse/core';
-import { onBeforeUnmount, ref, Ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 
 import useDateCompareToRelative from '@/helpers/useDateCompareToRelative';
-
-interface IUseDateInterval {
-  currentDateFormated: Ref<string>;
-}
+import IUseDateInterval from '@/types/interfaces/date/helpers/IUseDateInterval';
 
 function useDateInterval(
   dateStartISO: string,

@@ -6,14 +6,14 @@ import {
   deleteTodo,
   createTodo
 } from '@/services/todos';
-import IUseTodos from '@/types/interfaces/IUseTodos';
-import { Meta } from '@/types/todos/Meta';
-import { SingleTodo } from '@/types/todos/SingleTodo';
+import IUseTodos from '@/types/interfaces/todos/composables/IUseTodos';
+import IMeta from '@/types/interfaces/todos/responses/IMeta';
+import ISingleTodo from '@/types/interfaces/todos/responses/ISingleTodo';
 
 function useTodos(): IUseTodos {
-  const todos = ref<SingleTodo[]>([]);
+  const todos = ref<ISingleTodo[]>([]);
 
-  const meta = reactive<Meta>({
+  const meta = reactive<IMeta>({
     hasNextPage: false,
     hasPrevPage: false,
     itemCount: 0,

@@ -24,7 +24,7 @@ import SingleTodo from '@/components/todos/SingleTodo.vue';
 import useSearch from '@/composables/useSearch';
 import useTodos from '@/composables/useTodos';
 import useCreatePaginationOffset from '@/helpers/useCreatePaginationOffset';
-import IUseCreatePaginationOffset from '@/types/interfaces/IUseCreatePaginationOffset';
+import IUseCreatePaginationOffset from '@/types/interfaces/pagination/helpers/IUseCreatePaginationOffset';
 
 export default defineComponent({
   name: 'App',
@@ -92,6 +92,7 @@ export default defineComponent({
 @import 'src/styles/index';
 .container {
   max-width: 50rem;
+  padding: 2rem;
   width: 100%;
   margin: 0 auto;
 }

@@ -1,13 +1,13 @@
 import { AxiosResponse } from 'axios';
 
 import useHTTP from '@/http';
-import { SingleTodo } from '@/types/todos/SingleTodo';
+import ISingleTodo from '@/types/interfaces/todos/responses/ISingleTodo';
 
 async function createTodo(
   description: string
-): Promise<AxiosResponse<SingleTodo>> {
+): Promise<AxiosResponse<ISingleTodo>> {
   try {
-    const response = await useHTTP().post<SingleTodo>('/todo', {
+    const response = await useHTTP().post<ISingleTodo>('/todo', {
       description
     });
 

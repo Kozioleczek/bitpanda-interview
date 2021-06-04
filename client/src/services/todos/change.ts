@@ -1,14 +1,14 @@
 import { AxiosResponse } from 'axios';
 
 import useHTTP from '@/http';
-import { SingleTodo } from '@/types/todos/SingleTodo';
+import ISingleTodo from '@/types/interfaces/todos/responses/ISingleTodo';
 
 async function changeTodo(
   id: string,
   isDone: boolean
-): Promise<AxiosResponse<SingleTodo>> {
+): Promise<AxiosResponse<ISingleTodo>> {
   try {
-    const response = await useHTTP().put<SingleTodo>(`/todo/${id}`, {
+    const response = await useHTTP().put<ISingleTodo>(`/todo/${id}`, {
       done: isDone
     });
 

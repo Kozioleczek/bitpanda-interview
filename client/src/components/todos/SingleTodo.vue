@@ -4,16 +4,16 @@
         BaseCheckbox(:is-checked="isDone" @clicked="$emit('change:isDone')")
     .todo__content
         p.description(:class="{'description--done': isDone}") 
-          slot(name="content")
+          p.description__content
+            slot(name="content")
           span.description__date {{currentDateFormated}}
     button.todo__button(@click="$emit('delete')")
         img.img--xl(:src="require('@/assets/svgs/remove.svg')")
 </template>
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
+import { defineComponent } from 'vue';
 
 import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
-
 import useDateInterval from '@/helpers/useDateInterval';
 
 export default defineComponent({
@@ -74,12 +74,17 @@ export default defineComponent({
 
 .description {
   @extend .font--lighter;
-  font-size: 1.5rem;
   margin: auto 0 auto 0;
+  $this: &;
 
   &--done {
-    text-decoration: line-through;
-    color: $secondary-gray;
+    #{$this}__content {
+      text-decoration: line-through;
+      color: $secondary-gray;
+    }
+  }
+  &__content {
+    font-size: 1.5rem;
   }
   &__date {
     margin-left: 0.5rem;

@@ -1,11 +1,11 @@
 import { Ref } from 'vue';
 
-import { Meta } from '@/types/todos/Meta';
-import { SingleTodo } from '@/types/todos/SingleTodo';
+import IMeta from '@/types/interfaces/todos/responses/IMeta';
+import ISingleTodo from '@/types/interfaces/todos/responses/ISingleTodo';
 
 interface IUseTodos {
-  todos: Ref<SingleTodo[]>;
-  meta: Meta;
+  todos: Ref<ISingleTodo[]>;
+  meta: IMeta;
   fetch: (
     searchQuery?: string,
     limit?: number,

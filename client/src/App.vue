@@ -2,20 +2,20 @@
 div#app.container
   header.header
     .header__search
-      SearchBar(v-model="searchQuery" :is-loading="isLoading")
+      SearchBar(v-model="searchQuery")
   main.main
-    CreateTodo(v-model="newTodoDescription" @createTask="handleCreate(newTodoDescription)")
+    CreateTodo(v-model="newTodoDescription" @createTask="createTask(newTodoDescription)")
     transition-group(v-if="todos.length > 0" name="todo-transition")
-      SingleTodo(v-for="(todo, index) in todos" :key="todo._id" :is-done="todo.done" :date-created="todo.createdAt" @delete="handleDelete(todo._id)" @change:isDone="handleChangeStatus(todo._id, !todo.done)")
+      SingleTodo(v-for="(todo, index) in todos" :key="todo._id" :is-done="todo.done" :date-created="todo.createdAt" @delete="deleteTask(todo._id)" @change:isDone="changeTaskStatus(todo._id, !todo.done)")
         template(#content) {{todo.description}}
     .no-todos(v-else)
         p.no-todos__content {{searchQuery === '' ? 'There is no todos available. Please create new one.' : `There is no results for phrase: ${searchQuery}`}}
   footer.footer
-    Pagination
+    Pagination(:is-next-page-reachable="meta.hasNextPage" :is-prev-page-reachable="meta.hasPrevPage" @nextPage="handlePagination(1)" @prevPage="handlePagination(-1)")
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, onMounted } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 
 import CreateTodo from '@/components/todos/CreateTodo.vue';
 import Pagination from '@/components/todos/Pagination.vue';
@@ -23,6 +23,8 @@ import SearchBar from '@/components/todos/SearchBar.vue';
 import SingleTodo from '@/components/todos/SingleTodo.vue';
 import useSearch from '@/composables/useSearch';
 import useTodos from '@/composables/useTodos';
+import useCreatePaginationOffset from '@/helpers/useCreatePaginationOffset';
+import IUseCreatePaginationOffset from '@/types/interfaces/IUseCreatePaginationOffset';
 
 export default defineComponent({
   name: 'App',
@@ -33,46 +35,53 @@ export default defineComponent({
     Pagination
   },
   setup() {
-    const searchQuery = ref<string>('');
-    const isLoading = ref(false);
-
     const {
       todos,
+      meta,
       fetch,
       deleteTask,
       createTask,
       changeTaskStatus
     } = useTodos();
 
-    onMounted(() => fetch());
+    // on query change call debounced search
+    const searchQuery = ref<string>('');
 
     watch(searchQuery, query => {
       useSearch(query, fetch);
     });
 
-    const handleDelete = async (taskID: string) => {
-      await deleteTask(taskID);
-      await fetch();
-    };
-
-    const handleChangeStatus = (taskID: string, isDone: boolean) => {
-      changeTaskStatus(taskID, isDone);
-    };
-
     // creating new todo
     const newTodoDescription = ref('');
 
-    const handleCreate = (description: string) => {
-      createTask(description);
+    // handle pagination
+    const todosPerPage = ref(20);
+
+    // When movePagesDirection -1 -> prevPage, 1 -> nextPage
+    const handlePagination = async (movePagesDirection: -1 | 1) => {
+      const offsetSetup: IUseCreatePaginationOffset = {
+        moveDirection: movePagesDirection,
+        offset: meta.offset,
+        limit: todosPerPage.value,
+        hasNextPage: meta.hasNextPage,
+        hasPrevPage: meta.hasPrevPage
+      };
+
+      await fetch(
+        searchQuery.value,
+        todosPerPage.value,
+        useCreatePaginationOffset(offsetSetup)
+      );
     };
 
     return {
       searchQuery,
-      isLoading,
       todos,
-      handleDelete,
-      handleChangeStatus,
-      handleCreate,
+      meta,
+      deleteTask,
+      changeTaskStatus,
+      createTask,
+      handlePagination,
       newTodoDescription
     };
   }

@@ -1,4 +1,4 @@
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 
 import {
   fetchTodos,
@@ -13,7 +13,7 @@ import { SingleTodo } from '@/types/todos/SingleTodo';
 function useTodos(): IUseTodos {
   const todos = ref<SingleTodo[]>([]);
 
-  let meta = reactive<Meta>({
+  const meta = reactive<Meta>({
     hasNextPage: false,
     hasPrevPage: false,
     itemCount: 0,
@@ -30,11 +30,17 @@ function useTodos(): IUseTodos {
       const response = await fetchTodos(searchQuery, limit, offset);
 
       todos.value = [...response.data.items];
-      meta = { ...response.data.meta };
+
+      Object.entries(response.data.meta).forEach(([key, value]) => {
+        meta[key] = value;
+      });
     } catch (error) {
       throw new Error(error);
     }
   };
+
+  // Fetch on initial first set of todos
+  onMounted(() => fetch());
 
   const changeTaskStatus: IUseTodos['changeTaskStatus'] = async (
     taskID,
@@ -66,6 +72,7 @@ function useTodos(): IUseTodos {
       if (modifiedTodoIndex !== -1) {
         todos.value.splice(modifiedTodoIndex, 1);
         await deleteTodo(taskID);
+        await fetch();
       } else {
         throw new Error('Provided task ID does not exist');
       }

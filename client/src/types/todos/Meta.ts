@@ -1,4 +1,5 @@
 export interface Meta {
+  [index: string]: boolean | number | null;
   hasNextPage: boolean;
   hasPrevPage: boolean;
   itemCount: number;

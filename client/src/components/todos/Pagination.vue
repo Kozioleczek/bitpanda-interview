@@ -1,15 +1,27 @@
 <template lang="pug">
 .pagination
-    button.pagination__button.pagination__button--rotate
+    button.pagination__button.pagination__button--rotate(:disabled="!isPrevPageReachable" @click="$emit('prevPage')")
         img.img--md(:src="require('@/assets/svgs/caret-right.svg')")
     .pagination__divider
-    button.pagination__button
+    button.pagination__button(:disabled="!isNextPageReachable" @click="$emit('nextPage')")
         img.img--md(:src="require('@/assets/svgs/caret-right.svg')")
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-export default defineComponent({});
+export default defineComponent({
+  emits: ['nextPage', 'prevPage'],
+  props: {
+    isNextPageReachable: {
+      type: Boolean,
+      default: false
+    },
+    isPrevPageReachable: {
+      type: Boolean,
+      default: false
+    }
+  }
+});
 </script>
 <style lang="scss" scoped>
 @import 'src/styles/index';
@@ -29,6 +41,9 @@ export default defineComponent({});
     cursor: pointer;
     &--rotate {
       transform: rotate(180deg);
+    }
+    &:disabled {
+      cursor: not-allowed;
     }
   }
   &__divider {

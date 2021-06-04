@@ -3,10 +3,10 @@
     .todo__checkbox
         BaseCheckbox(:is-checked="isDone" @clicked="$emit('change:isDone')")
     .todo__content
-        p.description(:class="{'description--done': isDone}") 
+        .description(:class="{'description--done': isDone}") 
           p.description__content
             slot(name="content")
-          span.description__date {{currentDateFormated}}
+          .description__date {{currentDateFormated}}
     button.todo__button(@click="$emit('delete')")
         img.img--xl(:src="require('@/assets/svgs/remove.svg')")
 </template>
@@ -47,7 +47,7 @@ export default defineComponent({
   border-top: 0.15rem solid rgba(0, 0, 0, 0.17);
   display: flex;
   justify-content: space-between;
-  align-content: center;
+  align-items: center;
   gap: 1rem;
 
   $this: &;
@@ -74,7 +74,8 @@ export default defineComponent({
 
 .description {
   @extend .font--lighter;
-  margin: auto 0 auto 0;
+  display: flex;
+  align-items: center;
   $this: &;
 
   &--done {
@@ -85,6 +86,7 @@ export default defineComponent({
   }
   &__content {
     font-size: 1.5rem;
+    margin: auto 0 auto 0;
   }
   &__date {
     margin-left: 0.5rem;

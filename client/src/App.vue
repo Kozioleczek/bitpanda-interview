@@ -8,8 +8,10 @@ div#app.container
     transition-group(v-if="todos.length > 0" name="todo-transition")
       SingleTodo(v-for="(todo, index) in todos" :key="todo._id" :is-done="todo.done" :date-created="todo.createdAt" @delete="deleteTask(todo._id)" @change:isDone="changeTaskStatus(todo._id, !todo.done)")
         template(#content) {{todo.description}}
-    .no-todos(v-else)
-        p.no-todos__content {{searchQuery === '' ? 'There is no todos available. Please create new one.' : `There is no results for phrase: ${searchQuery}`}}
+    .error(v-else-if="errorMessage !== ''")
+      p.error__content {{errorMessage}}
+    .error(v-else)
+        p.error__content {{searchQuery === '' ? 'There is no todos available. Please create new one.' : `There is no results for phrase: ${searchQuery}`}}
   footer.footer
     Pagination(:is-next-page-reachable="meta.hasNextPage" :is-prev-page-reachable="meta.hasPrevPage" @nextPage="handlePagination(1)" @prevPage="handlePagination(-1)")
 </template>
@@ -39,6 +41,7 @@ export default defineComponent({
       todos,
       meta,
       fetch,
+      errorMessage,
       deleteTask,
       createTask,
       changeTaskStatus
@@ -58,7 +61,9 @@ export default defineComponent({
     const todosPerPage = ref(20);
 
     // When movePagesDirection -1 -> prevPage, 1 -> nextPage
-    const handlePagination = async (movePagesDirection: -1 | 1) => {
+    const handlePagination = async (
+      movePagesDirection: -1 | 1
+    ): Promise<void> => {
       const offsetSetup: IUseCreatePaginationOffset = {
         moveDirection: movePagesDirection,
         offset: meta.offset,
@@ -67,11 +72,15 @@ export default defineComponent({
         hasPrevPage: meta.hasPrevPage
       };
 
-      await fetch(
-        searchQuery.value,
-        todosPerPage.value,
-        useCreatePaginationOffset(offsetSetup)
-      );
+      try {
+        await fetch(
+          searchQuery.value,
+          todosPerPage.value,
+          useCreatePaginationOffset(offsetSetup)
+        );
+      } catch (error) {
+        throw new Error(error);
+      }
     };
 
     return {
@@ -82,7 +91,8 @@ export default defineComponent({
       changeTaskStatus,
       createTask,
       handlePagination,
-      newTodoDescription
+      newTodoDescription,
+      errorMessage
     };
   }
 });
@@ -105,10 +115,11 @@ export default defineComponent({
 .main {
   background-color: $white;
   border-radius: 1rem;
-  border: 0.15rem solid rgba(0, 0, 0, 0.17);
+  border: $layout-border-width solid $layout-border-color;
+  position: relative;
 }
 
-.no-todos {
+.error {
   padding: 1rem 1.5rem 1rem 1.5rem;
   &__content {
     text-align: center;
@@ -142,6 +153,7 @@ export default defineComponent({
 
   &-leave-active {
     position: absolute;
+    width: 100%;
   }
 
   &-leave-to {

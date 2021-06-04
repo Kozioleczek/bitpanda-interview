@@ -11,6 +11,8 @@ import IMeta from '@/types/interfaces/todos/responses/IMeta';
 import ISingleTodo from '@/types/interfaces/todos/responses/ISingleTodo';
 
 function useTodos(): IUseTodos {
+  const errorMessage = ref<string>('');
+
   const todos = ref<ISingleTodo[]>([]);
 
   const meta = reactive<IMeta>({
@@ -25,8 +27,13 @@ function useTodos(): IUseTodos {
     prevPage: null
   });
 
-  const fetch: IUseTodos['fetch'] = async (searchQuery, limit, offset) => {
+  const fetch: IUseTodos['fetch'] = async (
+    searchQuery,
+    limit,
+    offset
+  ): Promise<void> => {
     try {
+      errorMessage.value = '';
       const response = await fetchTodos(searchQuery, limit, offset);
 
       todos.value = [...response.data.items];
@@ -35,7 +42,7 @@ function useTodos(): IUseTodos {
         meta[key] = value;
       });
     } catch (error) {
-      throw new Error(error);
+      errorMessage.value = error.message;
     }
   };
 
@@ -45,8 +52,9 @@ function useTodos(): IUseTodos {
   const changeTaskStatus: IUseTodos['changeTaskStatus'] = async (
     taskID,
     isDone
-  ) => {
+  ): Promise<void> => {
     try {
+      errorMessage.value = '';
       // local update of todo
       const modifiedTodoIndex = todos.value.findIndex(
         todo => todo._id === taskID
@@ -59,39 +67,58 @@ function useTodos(): IUseTodos {
         throw new Error('Provided task ID does not exist');
       }
     } catch (error) {
-      throw new Error(error);
+      errorMessage.value = error.message;
     }
   };
 
-  const deleteTask: IUseTodos['deleteTask'] = async taskID => {
+  const deleteTask: IUseTodos['deleteTask'] = async (taskID): Promise<void> => {
     try {
+      errorMessage.value = '';
       const modifiedTodoIndex = todos.value.findIndex(
         todo => todo._id === taskID
       );
 
       if (modifiedTodoIndex !== -1) {
-        todos.value.splice(modifiedTodoIndex, 1);
+        if (todos.value.length < 20) {
+          todos.value.splice(modifiedTodoIndex, 1);
+        }
+
         await deleteTodo(taskID);
         await fetch();
       } else {
         throw new Error('Provided task ID does not exist');
       }
     } catch (error) {
-      throw new Error(error);
+      errorMessage.value = error.message;
     }
   };
 
-  const createTask: IUseTodos['createTask'] = async description => {
+  const createTask: IUseTodos['createTask'] = async (
+    description
+  ): Promise<void> => {
     try {
+      errorMessage.value = '';
       const response = await createTodo(description);
 
-      todos.value.push(response.data);
+      await fetch();
+
+      if (todos.value.length < 20) {
+        todos.value.push(response.data);
+      }
     } catch (error) {
-      throw new Error(error);
+      errorMessage.value = error.message;
     }
   };
 
-  return { todos, meta, fetch, changeTaskStatus, deleteTask, createTask };
+  return {
+    todos,
+    meta,
+    errorMessage,
+    fetch,
+    changeTaskStatus,
+    deleteTask,
+    createTask
+  };
 }
 
 export default useTodos;

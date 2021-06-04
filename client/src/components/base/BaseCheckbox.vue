@@ -21,7 +21,7 @@ export default defineComponent({
 .checkbox {
   $this: &;
   padding: 1rem;
-  border: 0.15rem solid rgba(0, 0, 0, 0.17);
+  border: $layout-border-width solid $layout-border-color;
   border-radius: 100%;
   display: flex;
   align-content: center;

@@ -6,6 +6,7 @@ import ISingleTodo from '@/types/interfaces/todos/responses/ISingleTodo';
 interface IUseTodos {
   todos: Ref<ISingleTodo[]>;
   meta: IMeta;
+  errorMessage: Ref<string>;
   fetch: (
     searchQuery?: string,
     limit?: number,

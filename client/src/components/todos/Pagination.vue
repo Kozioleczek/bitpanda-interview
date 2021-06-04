@@ -26,7 +26,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import 'src/styles/index';
 .pagination {
-  border: 0.15rem solid rgba(0, 0, 0, 0.17);
+  border: $layout-border-width solid $layout-border-color;
   border-radius: 1rem;
   background-color: $white;
   padding: 0.5rem 0.75rem 0.5rem 0.75rem;
